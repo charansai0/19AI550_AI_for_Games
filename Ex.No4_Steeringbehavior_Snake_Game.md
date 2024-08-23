@@ -1,6 +1,6 @@
 # Ex.No: 4  Implementation of Snake game using Steering behaviors
-### DATE:                                                                            
-### REGISTER NUMBER : 
+### DATE: 16-08-2024                                                                      
+### REGISTER NUMBER : 2122212400261
 ### AIM: 
 To write a python program to simulate the snake game using steering behaviors
 ### Algorithm:
@@ -16,9 +16,98 @@ To write a python program to simulate the snake game using steering behaviors
 10.  Update the display
 11.  Stop the program
  ### Program:
+~~~
+import pygame
+import sys
+import random
 
+# Initialize Pygame
+pygame.init()
 
+# Constants
+WIDTH, HEIGHT = 800, 600
+BACKGROUND_COLOR = (0, 0, 0)
+SNAKE_COLOR = (0, 255, 0)
+FOOD_COLOR = (255, 0, 0)
+SNAKE_SIZE = 20
+FOOD_SIZE = 20
+MAX_SPEED = 5
+FPS = 15
 
+# Create the screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Steering Behavior Snake Game")
+
+# Clock to control the frame rate
+clock = pygame.time.Clock()
+
+class Snake:
+    def __init__(self):  # Fixed __init__ method
+        self.body = [pygame.Vector2(WIDTH // 2, HEIGHT // 2)]
+        self.direction = pygame.Vector2(MAX_SPEED, 0)
+        self.grow = False
+
+    def seek(self, target):
+        direction = target - self.body[0]
+        if direction.length() > 0:
+            self.direction = direction.normalize() * MAX_SPEED
+
+    def move(self):
+        if self.grow:
+            self.body.append(self.body[-1])
+            self.grow = False
+        for i in range(len(self.body) - 1, 0, -1):
+            self.body[i] = pygame.Vector2(self.body[i - 1])
+        self.body[0] += self.direction
+        self.wrap_around()
+
+    def wrap_around(self):
+        if self.body[0].x < 0: self.body[0].x = WIDTH
+        elif self.body[0].x >= WIDTH: self.body[0].x = 0
+        if self.body[0].y < 0: self.body[0].y = HEIGHT
+        elif self.body[0].y >= HEIGHT: self.body[0].y = 0
+
+    def draw(self, surface):
+        for segment in self.body:
+            pygame.draw.rect(surface, SNAKE_COLOR, pygame.Rect(segment.x, segment.y, SNAKE_SIZE, SNAKE_SIZE))
+
+    def check_collision(self, food_position):
+        return self.body[0].distance_to(food_position) < SNAKE_SIZE
+
+class Food:
+    def __init__(self):  # Fixed __init__ method
+        self.randomize_position()
+
+    def randomize_position(self):
+        self.position = pygame.Vector2(random.randint(0, (WIDTH - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE,
+                                       random.randint(0, (HEIGHT - FOOD_SIZE) // FOOD_SIZE) * FOOD_SIZE)
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, FOOD_COLOR, pygame.Rect(self.position.x, self.position.y, FOOD_SIZE, FOOD_SIZE))
+
+# Create instances
+snake = Snake()
+food = Food()
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    snake.seek(food.position)
+    snake.move()
+
+    if snake.check_collision(food.position):
+        snake.grow = True
+        food.randomize_position()
+
+    screen.fill(BACKGROUND_COLOR)
+    food.draw(screen)
+    snake.draw(screen)
+    pygame.display.flip()
+    clock.tick(FPS)
+~~~
 
 
 
@@ -29,6 +118,8 @@ To write a python program to simulate the snake game using steering behaviors
 
 ### Output:
 
+![358530346-46eca225-d9c6-43dc-b293-9caee7c86b00](https://github.com/user-attachments/assets/a731d15f-4095-4f5e-af02-6792bfb4c190)
+![358530364-50dcfe1c-74b2-4829-9f6b-0a47c063f328](https://github.com/user-attachments/assets/41595584-6e54-4f28-b159-b1f80ad42e62)
 
 
 ### Result:
