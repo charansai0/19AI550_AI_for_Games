@@ -1,8 +1,8 @@
-![pong game ](https://github.com/user-attachments/assets/562878b3-fccb-43a2-bb2d-779a2798b91b)# Ex.No: 11  Mini Project 
+# Ex.No: 11  Mini Project 
 ### DATE:                                                                            
 ### REGISTER NUMBER : 212221240061
 ### AIM: To implement the Pong game in Python using the turtle
-To write a python program to simulate the game using ---------------.
+
 ### Algorithm:
 ~~~
 1. Initialize game window, paddles, ball, and score display.
