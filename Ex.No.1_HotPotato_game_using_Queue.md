@@ -1,6 +1,6 @@
 # Ex.No: 1  Implementation of HotPotato game using Queue 
-### DATE: 14-08-2024                                                                            
-### REGISTER NUMBER : 212221240061
+### DATE:  9.8.2024                                                                          
+### REGISTER NUMBER : 212221240021
 ### AIM: 
 To write a python program to simulate the process of passing an item among players and eliminating players based on the given rules until a single winner is determined.
 ### Algorithm:
@@ -10,101 +10,50 @@ To write a python program to simulate the process of passing an item among playe
 4. Eliminate the Holder: After the set number of passes, remove the person who holds the potato (dequeue the front of the queue).
 5. Repeat: Continue the process until only one person remains in the queue.
 ### Program:
-```
-import pygame
-import sys
+~~~
+import queue
 import random
-import math
+import time
 
-# Initialize Pygame
-pygame.init()
+def hot_potato(names, num):
+    sim_queue = queue.Queue()
 
-# Constants
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
-BACKGROUND_COLOR = (30, 30, 30)
-PLAYER_COLOR = (255, 100, 100)
-FONT_COLOR = (255, 255, 255)
-FPS = 60
+    for name in names:
+        sim_queue.put(name)
 
-# Setup the screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Hot Potato Game")
-clock = pygame.time.Clock()
+    while sim_queue.qsize() > 1:
+        for _ in range(num):
+            sim_queue.put(sim_queue.get())
+        eliminated = sim_queue.get()
+        print(f"{eliminated} is eliminated!")
 
-# Font
-font = pygame.font.Font(None, 36)
+    return sim_queue.get()
 
-# Players
-players = ["Alice", "Bob", "Charlie", "David", "Eve"]
-num_players = len(players)
+def main():
+    players = ["Alice", "Bob", "Charlie", "David", "Eve"]
+    #num_passes = random.randint(1, 10)
+    num_passes=1
+    print("Hot Potato Game Start!")
+    time.sleep(1)
+    winner = hot_potato(players, num_passes)
+    print(f"\nThe winner is: {winner}")
 
-# Circle Positions
-center_x, center_y = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
-radius = 200
-angles = [2 * math.pi * i / num_players for i in range(num_players)]
+if __name__ == "__main__":
+    main()
+~~~
 
-# Game variables
-current_index = 0
-timer = 0
-pass_interval = 1000  # Time in milliseconds between passes
 
-def draw_players():
-    for i, angle in enumerate(angles):
-        x = center_x + radius * math.cos(angle)
-        y = center_y + radius * math.sin(angle)
-        pygame.draw.circle(screen, PLAYER_COLOR, (int(x), int(y)), 40)
-        name_text = font.render(players[i], True, FONT_COLOR)
-        screen.blit(name_text, (int(x) - name_text.get_width() // 2, int(y) - name_text.get_height() // 2))
 
-def remove_player(index):
-    del players[index]
-    del angles[index]
-    for i in range(len(angles)):
-        angles[i] = 2 * math.pi * i / len(players)
 
-# Main Game Loop
-running = True
-while running:
-    screen.fill(BACKGROUND_COLOR)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
 
-    if len(players) > 1:
-        timer += clock.get_time()
-        if timer >= pass_interval:
-            timer = 0
-            current_index = (current_index + 1) % len(players)
 
-        draw_players()
 
-        # Highlight the player with the potato
-        x = center_x + radius * math.cos(angles[current_index])
-        y = center_y + radius * math.sin(angles[current_index])
-        pygame.draw.circle(screen, (255, 255, 0), (int(x), int(y)), 50, 5)
-        
-        if random.random() < 0.01:  # Randomly remove a player
-            remove_player(current_index)
-            current_index %= len(players)
 
-    else:
-        # Display the winner
-        winner_text = font.render(f"The winner is {players[0]}", True, FONT_COLOR)
-        screen.blit(winner_text, (SCREEN_WIDTH // 2 - winner_text.get_width() // 2, SCREEN_HEIGHT // 2 - winner_text.get_height() // 2))
 
-    pygame.display.flip()
-    clock.tick(FPS)
-
-pygame.quit()
-sys.exit()
-
-```
 ### Output:
-![Screenshot 2024-08-09 143443](https://github.com/user-attachments/assets/ac6c1359-b8fd-4fa3-a0d9-37acd2cff2d9)
 
-![image](https://github.com/user-attachments/assets/af52c092-54de-4865-977f-8cc52bf6e887)
-
+![356538888-f21360e0-b5b9-4d9e-8ff0-42dac36872c4](https://github.com/user-attachments/assets/113720e0-9f01-4a70-b46c-6a8ad8f3a148)
 
 
 ### Result:
